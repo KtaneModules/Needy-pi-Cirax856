@@ -1,0 +1,10 @@
+{
+  "name": "needyPi-Editor",
+  "references": [
+    "needyPi"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": []
+}
