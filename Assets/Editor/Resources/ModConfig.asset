@@ -15,6 +15,6 @@ MonoBehaviour:
   title: Needy Pi
   author: Cirax856
   description: Select the correct 5 digits of pi from and to a random range.
-  version: 1.0.0
+  version: 1.2.0
   outputFolder: build
   previewImage: {fileID: 2800000, guid: eaa6ecddd0dae274882a3eb445bb1181, type: 3}

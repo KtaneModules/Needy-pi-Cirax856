@@ -47,6 +47,8 @@ public class NeedyPi : MonoBehaviour
 
     protected void OnNeedyActivation()
     {
+        correctAnswer = "";
+
         from = Random.Range(1, 16);
         to = from + 4;
 
@@ -67,6 +69,7 @@ public class NeedyPi : MonoBehaviour
 
     protected void OnNeedyDeactivation()
     {
+        input = "";
         correctAnswer = "";
         isActivated = false;
     }
@@ -96,6 +99,37 @@ public class NeedyPi : MonoBehaviour
             {
                 module.HandlePass();
                 Debug.LogFormat("[Needy Pi {0}] Successfully inputted the correct digits of pi!", moduleId);
+                input = "";
+                correctAnswer = "";
+            }
+        }
+    }
+
+#pragma warning disable 0414
+    readonly private string TwitchHelpMessage = "Input digits using \"!{0} <digits>\". Ex. \"!{0} 14159\".";
+#pragma warning restore 0414
+
+    private IEnumerator ProcessTwitchCommand(string command)
+    {
+        command = command.ToLowerInvariant();
+
+        if ((command.Length == 0) || (command.Length > 5))
+        {
+            yield return "sendtocharerror Please input a max 5 digit number.";
+        } else
+        {
+            for (int i = 0; i < command.Length; i++)
+            {
+                if ((!(char.IsDigit(command[i]))) || (command[i] - '0' < 0))
+                {
+                    yield return $"sendtocharerror Position {i} was a \"{command[i]}\", which is not a digit... (previous digits, if any, were inputted)";
+                }
+                else
+                {
+                    yield return null;
+                    yield return new WaitForSeconds(0.2f);
+                    buttonPress((int)command[i] - '0');
+                }
             }
         }
     }
