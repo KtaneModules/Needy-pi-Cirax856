@@ -5,6 +5,7 @@ using UnityEngine;
 public class NeedyPi : MonoBehaviour
 {
     public KMNeedyModule module;
+    public KMSelectable moduleSelectable;
 
     public TextMesh digitLengthText;
     public TextMesh inputText;
@@ -20,6 +21,7 @@ public class NeedyPi : MonoBehaviour
     private string input = "";
 
     bool isActivated = false;
+    bool isSelected = false;
 
     static int moduleIdCounter = 1;
 #pragma warning disable 0414
@@ -28,8 +30,9 @@ public class NeedyPi : MonoBehaviour
 
     private void Start()
     {
-        GetComponent<KMNeedyModule>().OnNeedyActivation += OnNeedyActivation;
-        GetComponent<KMNeedyModule>().OnNeedyDeactivation += OnNeedyDeactivation;
+        module.OnNeedyActivation += OnNeedyActivation;
+        module.OnNeedyDeactivation += OnNeedyDeactivation;
+        module.OnTimerExpired += OnTimerExpired;
 
         moduleId = moduleIdCounter++;
 
@@ -43,6 +46,26 @@ public class NeedyPi : MonoBehaviour
         buttons[7].OnInteract += delegate () { buttonPress(7); return false; };
         buttons[8].OnInteract += delegate () { buttonPress(8); return false; };
         buttons[9].OnInteract += delegate () { buttonPress(9); return false; };
+
+        moduleSelectable.OnFocus += delegate () { isSelected = true; };
+        moduleSelectable.OnDefocus += delegate () { isSelected = false; };
+    }
+
+    private void Update()
+    {
+        if(isSelected)
+        {
+            if (Input.GetKeyDown(KeyCode.Keypad0)) buttonPress(0);
+            if (Input.GetKeyDown(KeyCode.Keypad1)) buttonPress(1);
+            if (Input.GetKeyDown(KeyCode.Keypad2)) buttonPress(2);
+            if (Input.GetKeyDown(KeyCode.Keypad3)) buttonPress(3);
+            if (Input.GetKeyDown(KeyCode.Keypad4)) buttonPress(4);
+            if (Input.GetKeyDown(KeyCode.Keypad5)) buttonPress(5);
+            if (Input.GetKeyDown(KeyCode.Keypad6)) buttonPress(6);
+            if (Input.GetKeyDown(KeyCode.Keypad7)) buttonPress(7);
+            if (Input.GetKeyDown(KeyCode.Keypad8)) buttonPress(8);
+            if (Input.GetKeyDown(KeyCode.Keypad9)) buttonPress(9);
+        }
     }
 
     protected void OnNeedyActivation()
@@ -57,7 +80,7 @@ public class NeedyPi : MonoBehaviour
             correctAnswer += pi[i];
         }
 
-        Debug.LogFormat("[Needy Pi {0}] From range {1} to {2}, expecting {3}", moduleId, from, to, correctAnswer);
+        Debug.LogFormat("[Needy Pi #{0}] From range {1} to {2}, expecting {3}", moduleId, from, to, correctAnswer);
 
         digitLengthText.text = $"Digits: {from}-{to}";
 
@@ -77,7 +100,7 @@ public class NeedyPi : MonoBehaviour
     protected void OnTimerExpired()
     {
         module.HandleStrike();
-        Debug.LogFormat("[Needy Pi {0}] Time ran out! Strike!", moduleId);
+        Debug.LogFormat("[Needy Pi #{0}] Time ran out! Strike!", moduleId);
     }
 
     private void buttonPress(int buttonNumber)
@@ -92,13 +115,13 @@ public class NeedyPi : MonoBehaviour
             else
             {
                 module.HandleStrike();
-                Debug.LogFormat("[Needy Pi {0}] Wrong! Inputted {1}, while expected {2}.", moduleId, input, correctAnswer);
+                Debug.LogFormat("[Needy Pi #{0}] Wrong! Inputted {1}, while expected {2}.", moduleId, input, correctAnswer);
             }
 
             if (input.Length == correctAnswer.Length)
             {
                 module.HandlePass();
-                Debug.LogFormat("[Needy Pi {0}] Successfully inputted the correct digits of pi!", moduleId);
+                Debug.LogFormat("[Needy Pi #{0}] Successfully inputted the correct digits of pi!", moduleId);
                 input = "";
                 correctAnswer = "";
             }

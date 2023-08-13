@@ -3607,6 +3607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   module: {fileID: 114765550504287120}
+  moduleSelectable: {fileID: 114514638284771650}
   digitLengthText: {fileID: 102749853021242464}
   inputText: {fileID: 102657962370047238}
   buttons:
