@@ -115,7 +115,7 @@ public class NeedyPi : MonoBehaviour
             else
             {
                 module.HandleStrike();
-                Debug.LogFormat("[Needy Pi #{0}] Wrong! Inputted {1}, while expected {2}.", moduleId, input, correctAnswer);
+                Debug.LogFormat("[Needy Pi #{0}] Wrong! Inputted digit at position {1}: {2}, while expected {3}.", moduleId, input.Length + 1, buttonNumber.ToString(), correctAnswer[input.Length].ToString());
             }
 
             if (input.Length == correctAnswer.Length)
